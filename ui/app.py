@@ -1,4 +1,5 @@
 import streamlit as st
+from tensorflow.keras.models import load_model
 import numpy as np
 import pandas as pd
 import tifffile as tiff
@@ -24,7 +25,7 @@ CLASSES = [
 # Load model
 @st.cache_resource
 def load_prediction_model():
-    model = None  # todo load model
+    model = load_model("models/model.h5")
     return model
 
 
@@ -90,11 +91,7 @@ if uploaded_file is not None:
 
             if model == None:  # todo
                 st.warning("Model not loaded. Generating dummy data.")
-                # Dummy prediction for testing UI
-                probs = np.random.random((1, 10))
-                probs = probs / probs.sum()  # Normalize
             else:
-                # Real Inference
                 probs = model.predict(input_tensor)
 
             top_idx = np.argmax(probs[0])
